@@ -1,0 +1,153 @@
+﻿@page
+@model AppSecPracticalAssignment.Pages.RegisterModel
+@{
+}
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+    function onSubmit(token) {
+        document.getElementById("register").submit();
+    }
+</script>
+
+<script type="text/javascript" src="~/js/zxcvbn.js"></script>
+@* <script>
+    function checkPasswordStrength() {
+        var password = document.getElementById('password').value;
+        var result = zxcvbn(password);
+
+        // Update the feedback dynamically
+        var feedbackElement = document.getElementById('password-strength-feedback');
+        feedbackElement.innerHTML = "Password Strength: " + result.score + "/4 - " + result.feedback.suggestions.join(', ');
+    }
+</script> *@
+
+@* <script>
+    // Get a reference to the password input field and feedback element
+    const passwordInput = document.getElementById("RModel.Password");
+    const feedbackElement = document.getElementById("password-strength-feedback");
+
+    // Function to evaluate password strength and display feedback
+    function evaluatePasswordStrength() {
+        const password = passwordInput.value;
+        const result = zxcvbn(password);
+
+        // Clear any previous feedback
+        feedbackElement.textContent = "";
+
+        // Display strength based on zxcvbn score
+        const strengthClasses = ["progress-bar-danger", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
+        const strengthBar = document.createElement("div");
+        strengthBar.classList.add("progress", "mb-3");
+        const strengthBarInner = document.createElement("div");
+        strengthBarInner.classList.add("progress-bar", strengthClasses[result.score]);
+        strengthBarInner.style.width = `${result.score * 25}%`;
+        strengthBarInner.textContent = `Strength: ${result.score * 25}%`;
+        strengthBar.appendChild(strengthBarInner);
+        feedbackElement.appendChild(strengthBar);
+
+        // Display specific feedback and suggestions from zxcvbn
+        if (result.feedback.warning) {
+            feedbackElement.appendChild(document.createElement("p")).textContent = result.feedback.warning;
+        }
+        if (result.feedback.suggestions.length > 0) {
+            const suggestionsList = document.createElement("ul");
+            feedbackElement.appendChild(suggestionsList);
+            result.feedback.suggestions.forEach(suggestion => {
+                const suggestionItem = document.createElement("li");
+                suggestionItem.textContent = suggestion;
+                suggestionsList.appendChild(suggestionItem);
+            });
+        }
+    }
+
+    // Evaluate password strength on input and on form submission
+    passwordInput.addEventListener("input", evaluatePasswordStrength);
+    document.getElementById("register").addEventListener("submit", evaluatePasswordStrength);
+</script>
+ *@
+<div class="container mt-5">
+
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-sm-12 col-md-12 col-lg-4">
+            <h1 class="mb-3">Register </h1>
+
+            <form method="post" id="register">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.FirstName">First Name</label>
+                    <input type="text" asp-for="RModel.FirstName" class="form-control" />
+                    <span asp-validaton-for="RModel.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.LastName">Last Name</label>
+                    <input type="text" asp-for="RModel.LastName" class="form-control" />
+                    <span asp-validaton-for="RModel.LastName" class="text-danger"></span>
+                </div>
+
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.CreditCardNo">Credit Card No</label>
+                    <input type="number" asp-for="RModel.CreditCardNo" class="form-control" />
+                    <span asp-validaton-for="RModel.CreditCardNo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.MobileNo">Mobile Number</label>
+                    <input type="tel" asp-for="RModel.MobileNo" class="form-control" />
+                    <span asp-validaton-for="RModel.MobileNo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.BillingAddress">Billing Address</label>
+                    <input type="text" asp-for="RModel.BillingAddress" class="form-control" />
+                    <span asp-validaton-for="RModel.BillingAddress" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.ShippingAddress">Shipping Address</label>
+                    <input type="text" asp-for="RModel.ShippingAddress" class="form-control" />
+                    <span asp-validaton-for="RModel.ShippingAddress" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.Email">Email Address</label>
+                    <input type="email" asp-for="RModel.Email" class="form-control" />
+                    <span asp-validaton-for="RModel.Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.Password" id="password">Password</label>
+                    <input type="password" asp-for="RModel.Password" class="form-control" />
+                    <span asp-validaton-for="RModel.Password" class="text-danger"></span>
+                </div>
+
+                <div id="password-strength-feedback"></div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
+                    <input type="password" asp-for="RModel.ConfirmPassword" class="form-control" />
+                    <span asp-validaton-for="RModel.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" asp-for="RModel.Photo">Photo</label>
+                    <input type="file" asp-for="RModel.Photo" class="form-control" />
+                    <span asp-validaton-for="RModel.Photo" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button class="g-recaptcha btn btn-primary"
+                            data-sitekey="6LcGmTspAAAAAEoyKCmbo_qeIP0PT_oM4roqWoAa"
+                            data-callback='onSubmit'
+                            data-action='submit'>
+                        Register
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

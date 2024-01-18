@@ -1,0 +1,59 @@
+﻿@page
+@model AppSecPracticalAssignment.Pages.LoginModel
+@{
+}
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+	function onSubmit(token) {
+		document.getElementById("login").submit();
+	}
+</script>
+
+<div class="container mt-5">
+
+	<div class="row justify-content-center align-items-center">
+
+		<div class="col-sm-12 col-md-12 col-lg-4">
+			<h1 class="mb-3">Login </h1>
+
+			<form method="post" id="login">
+				<div asp-validation-summary="All" class="text-danger"></div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="LModel.Email">Email Address</label>
+					<input type="email" asp-for="LModel.Email" class="form-control" />
+					<span asp-validaton-for="LModel.Email" class="text-danger"></span>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label" asp-for="LModel.Password">Password</label>
+					<input type="password" asp-for="LModel.Password" class="form-control" />
+					<span asp-validaton-for="LModel.Password" class="text-danger"></span>
+				</div>
+
+				@* <div class="mb-3 form-check">
+					<input type="checkbox" asp-for="LModel.TwoFactorAuthProviderName" class="form-check-input" />
+					<label class="form-check-label" asp-for="LModel.TwoFactorAuthProviderName">Remember Me?</label>
+				</div> *@
+
+				<div class="mb-3 form-check">
+					<input type="checkbox" asp-for="LModel.RememberMe" class="form-check-input" />
+					<label class="form-check-label" asp-for="LModel.RememberMe">Remember Me?</label>
+				</div>
+
+				<div class="mb-3">
+					<button class="g-recaptcha btn btn-primary"
+							data-sitekey="6LcGmTspAAAAAEoyKCmbo_qeIP0PT_oM4roqWoAa"
+							data-callback='onSubmit'
+							data-action='submit'>
+						Login
+					</button>
+				</div>
+
+				@* 				<input name="__RequestVerificationToken" type="hidden" value="CfDJ8MZ1yRS5ySZJqjGnctAjlJcuQEPXqJHkCYWpvhGPis3j1s7cUUZByFfabzIP0xlz2kWwbaXZQ86hzrHmeU5DlD-u8DHmg_a5PhLwDcpJSdpnO4bHtE_X2OksjQW2uRp7ZWdnf1d0hcJZ1eAWtUNabHw" />
+				*@
+			</form>
+		</div>
+	</div>
+</div>

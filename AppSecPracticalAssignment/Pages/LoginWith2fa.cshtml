@@ -1,0 +1,32 @@
+﻿@page
+@model AppSecPracticalAssignment.Pages.LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-factor authentication";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <input asp-for="RememberMe" type="hidden" />
+            <input asp-for="L2faModel.TwoFactAuthProviderName" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="L2faModel.TwoFactorCode" class="form-control" autocomplete="off" />
+                <label asp-for="L2faModel.TwoFactorCode" class="form-label"></label>
+                <span asp-validation-for="L2faModel.TwoFactorCode" class="text-danger"></span>
+            </div>
+            <div class="checkbox mb-3">
+                <label asp-for="L2faModel.RememberMe" class="form-label">
+                    <input asp-for="L2faModel.RememberMe" />
+                    @Html.DisplayNameFor(m => m.L2faModel.RememberMe)
+                </label>
+            </div>
+            <div>
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+            </div>
+        </form>
+    </div>
+</div>
