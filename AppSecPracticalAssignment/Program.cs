@@ -14,7 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AuthDbContext>();
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>().AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("Default");
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
+/*    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>("Default");
+*/
 
 //P6
 builder.Services.ConfigureApplicationCookie(Config =>
@@ -108,16 +110,17 @@ builder.Services.Configure<IdentityOptions>(options =>
     // User settings.
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = true;
-
     //addons
-/*    options.Stores.ProtectPersonalData = true;
-*/   /* options.Stores.MaxLengthForKeys = 5;
-    options.SignIn.RequireConfirmedPhoneNumber = true;
-    options.SignIn.RequireConfirmedEmail = true;
-    options.SignIn.RequireConfirmedAccount = true;*/
-/*    options.Tokens.AuthenticatorIssuer = EmailTokenProvider.Default;
-*//*    options.Tokens.ChangePhoneNumberTokenProvider = ?;
-*/});
+    /*    options.Stores.ProtectPersonalData = true;
+    */
+/*    options.Stores.MaxLengthForKeys = 5;
+*/    /*options.SignIn.RequireConfirmedPhoneNumber = true;
+    options.SignIn.RequireConfirmedEmail = true;*/
+/*    options.SignIn.RequireConfirmedAccount = true;
+*/    /*    options.Tokens.AuthenticatorIssuer = EmailTokenProvider.Default;
+    *//*    options.Tokens.ChangePhoneNumberTokenProvider = ?;
+    */
+});
 
 //Logging
 builder.Services.AddLogging(configure =>

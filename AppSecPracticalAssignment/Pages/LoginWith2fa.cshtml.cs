@@ -37,18 +37,17 @@ namespace AppSecPracticalAssignment.Pages
             UserManager<ApplicationUser> userManager,
             ILogger<LoginWith2faModel> logger,
             IEmailSender emailSender,
-            ISMSSenderService _smsSenderService)
+            ISMSSenderService smsSenderService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _logger = logger;
             _emailSender = emailSender;
-            _smsSenderService = _smsSenderService;
+            _smsSenderService = smsSenderService;
         }
 
         public async Task<IActionResult> OnGetAsync(bool rememberMe)
         {
-            // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
             if (user == null)
@@ -56,41 +55,14 @@ namespace AppSecPracticalAssignment.Pages
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }
 
-            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
-
-
-
-
-
-
-
-
-
-
-            if (providers.Any(_ => _ == "Phone"))
-            {
-                L2faModel.TwoFactAuthProviderName = "Phone";
-                var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Phone");
-                await _smsSenderService.SendSMSAsync(user.PhoneNumber, $"OTP Code: ${token}");
-            }
-            else if (providers.Any(_ => _ == "Email"))
-            {
-                var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-                await _emailSender.SendEmailAsync(user.Email, "2FA Code",
-                    $"<h3 >{token}</h3>.");
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-            }
-
-            /*            ReturnUrl = returnUrl;
-            */
-            RememberMe = rememberMe;
+/*            ReturnUrl = returnUrl;
+*/            RememberMe = rememberMe;
 
             return Page();
         }
 
+        /*        public void OnGet() { }
+        */
         public async Task<IActionResult> OnPostAsync(bool rememberMe)
         {
             if (!ModelState.IsValid)
@@ -98,8 +70,9 @@ namespace AppSecPracticalAssignment.Pages
                 return Page();
             }
 
-/*            returnUrl = returnUrl ?? Url.Content("~/");
-*/
+            /*            returnUrl = returnUrl ?? Url.Content("~/");
+            */
+
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -108,9 +81,27 @@ namespace AppSecPracticalAssignment.Pages
 
             var authenticatorCode = L2faModel.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorSignInAsync(L2faModel.TwoFactAuthProviderName, authenticatorCode, rememberMe, L2faModel.RememberMe);
+            /*            var result = await _signInManager.TwoFactorSignInAsync(L2faModel.TwoFactAuthProviderName, authenticatorCode, rememberMe, L2faModel.RememberMe);
+            */
+            var result = await _signInManager.TwoFactorSignInAsync(L2faModel.TwoFactAuthProviderName, authenticatorCode, false, false);
 
             var userId = await _userManager.GetUserIdAsync(user);
+
+            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            if (providers.Any(_ => _ == "Phone"))
+            {
+                L2faModel.TwoFactAuthProviderName = "Phone";
+                var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Phone");
+
+                await _smsSenderService.SendSMSAsync(user.PhoneNumber, $"OTP: {token}");
+            }
+            else if (providers.Any(_ => _ == "Email"))
+            {
+                L2faModel.TwoFactAuthProviderName = "Email";
+                var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+
+                await _emailSender.SendEmailAsync(user.Email, "Email 2FA Code", $"<h1>{token}</h1>");
+            }
 
             if (result.Succeeded)
             {

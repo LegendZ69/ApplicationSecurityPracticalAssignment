@@ -39,21 +39,21 @@ namespace AppSecPracticalAssignment.Pages
             _logger = logger;
         }
 
-        /*public async Task OnGetAsync()
-        *//*public async Task OnGetAsync(string returnUrl = null)*//*
-        {
-            *//*if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
-            }*/
+        /*
+                public async Task OnGetAsync(string returnUrl = null)
+                {
+                    *//*if (!string.IsNullOrEmpty(ErrorMessage))
+                    {
+                        ModelState.AddModelError(string.Empty, ErrorMessage);
+                    }*//*
 
-            /*returnUrl ??= Url.Content("~/");*//*
+                    returnUrl ??= Url.Content("~/");
 
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync("MyCookieAuth");
+                    // Clear the existing external cookie to ensure a clean login process
+                    await HttpContext.SignOutAsync();
 
-            *//*ReturnUrl = returnUrl;*//*
-        }*/
+                    ReturnUrl = returnUrl;
+                }*/
 
         public void OnGet()
         {
@@ -67,39 +67,7 @@ namespace AppSecPracticalAssignment.Pages
 */
 			if (ModelState.IsValid)
             {
-                //YT
-                /*var user = await signInManager.GetTwoFactorAuthenticationUserAsync();
-                if (user == null)
-                {
-                    throw new InvalidOperationException($"Unable to load Two-Factor Authentication");
-                }
-
-                var authenticatorCode = LModel.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-                var result = await signInManager.TwoFactorSignInAsync(LModel.TwoFactorAuthProviderName, authenticatorCode, false, false);
-                var userid = await userManager.GetUserIdAsync(user);
-
-                var providers = await userManager.GetValidTwoFactorProvidersAsync(user);
-                if (providers.Any(_ => _ == "Phone"))
-                {
-                    LModel.TwoFactorAuthProviderName = "Phone";
-                    var token = await userManager.GenerateTwoFactorTokenAsync(user, "Phone");
-
-                    await _sMSSenderService.SendSMSAsync(user.PhoneNumber, $"OTP: {token}");
-                }*/
-                /*else if (providers.Any(_ => _ == "Email"))
-                {
-                    LModel.TwoFactorAuthProviderName = "Email";
-                    var token = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
-
-                    await _emailSender.SendEmailAsync(LModel.Email, "Email 2FA Code", $"<h1>{token}</h1>");
-                }*/
-
-
-
-
                 HttpContext.Session.SetString("SSEmail", LModel.Email); //L4 Slide 23
-
                 var identityResult = await signInManager.PasswordSignInAsync(LModel.Email, LModel.Password, LModel.RememberMe, true);
                 if (identityResult.Succeeded)
                 {
@@ -126,12 +94,12 @@ namespace AppSecPracticalAssignment.Pages
 
 					_logger.LogInformation("User logged in.");
 
-					return RedirectToPage("Index");
+                    return RedirectToPage("Index");
                 }
 
-				//Scaffolding
-				if (identityResult.RequiresTwoFactor)
-				{
+                //Scaffolding
+                if (identityResult.RequiresTwoFactor)
+                {
                     /*					return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = LModel.RememberMe });*/
                     return RedirectToPage("LoginWith2fa", new { RememberMe = LModel.RememberMe });
 

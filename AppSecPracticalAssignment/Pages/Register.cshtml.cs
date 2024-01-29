@@ -35,8 +35,6 @@ namespace AppSecPracticalAssignment.Pages
 
         public string ReturnUrl { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
@@ -57,13 +55,11 @@ namespace AppSecPracticalAssignment.Pages
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 //addons Scaffolding
@@ -71,7 +67,7 @@ namespace AppSecPracticalAssignment.Pages
 
                 await _userStore.SetUserNameAsync(createUser, RModel.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(createUser, RModel.Email, CancellationToken.None);
-                var result = await userManager.CreateAsync(createUser, RModel.Password);*/
+                var createUserResult = await userManager.CreateAsync(createUser, RModel.Password);*/
 
                 var dataProtectionProvider = DataProtectionProvider.Create("EncryptData");
                 var protector = dataProtectionProvider.CreateProtector("MySecretKey");
@@ -103,14 +99,18 @@ namespace AppSecPracticalAssignment.Pages
                     }
                 }
 
+                //addons
+                await _userStore.SetUserNameAsync(user, RModel.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, RModel.Email, CancellationToken.None);
+
                 var result = await userManager.CreateAsync(user, RModel.Password);
                 if (result.Succeeded)
                 {
                     logger.LogInformation("User created a new account with password.");
 
                     var userId = await userManager.GetUserIdAsync(user);
-                    /*var code = await userManager.GenerateEmailConfirmationTokenAsync(user);*/
-                    /*code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/ConfirmEmail",
                         pageHandler: null,
@@ -118,14 +118,14 @@ namespace AppSecPracticalAssignment.Pages
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(RModel.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");*/
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (userManager.Options.SignIn.RequireConfirmedAccount)
+                    /*if (userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = RModel.Email , returnUrl = returnUrl });
                     }
                     else
-                    {
+                    {*/
                         result = await userManager.AddToRoleAsync(user, "User");
                         logger.LogInformation("Added as User role");
 
@@ -133,7 +133,7 @@ namespace AppSecPracticalAssignment.Pages
                         logger.LogInformation("User signed in");
 
                         return RedirectToPage("Index");
-                    }
+                    /*}*/
                 }
                 foreach (var error in result.Errors)
                 {

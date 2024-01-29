@@ -10,62 +10,6 @@
     }
 </script>
 
-<script type="text/javascript" src="~/js/zxcvbn.js"></script>
-@* <script>
-    function checkPasswordStrength() {
-        var password = document.getElementById('password').value;
-        var result = zxcvbn(password);
-
-        // Update the feedback dynamically
-        var feedbackElement = document.getElementById('password-strength-feedback');
-        feedbackElement.innerHTML = "Password Strength: " + result.score + "/4 - " + result.feedback.suggestions.join(', ');
-    }
-</script> *@
-
-@* <script>
-    // Get a reference to the password input field and feedback element
-    const passwordInput = document.getElementById("RModel.Password");
-    const feedbackElement = document.getElementById("password-strength-feedback");
-
-    // Function to evaluate password strength and display feedback
-    function evaluatePasswordStrength() {
-        const password = passwordInput.value;
-        const result = zxcvbn(password);
-
-        // Clear any previous feedback
-        feedbackElement.textContent = "";
-
-        // Display strength based on zxcvbn score
-        const strengthClasses = ["progress-bar-danger", "progress-bar-warning", "progress-bar-info", "progress-bar-success"];
-        const strengthBar = document.createElement("div");
-        strengthBar.classList.add("progress", "mb-3");
-        const strengthBarInner = document.createElement("div");
-        strengthBarInner.classList.add("progress-bar", strengthClasses[result.score]);
-        strengthBarInner.style.width = `${result.score * 25}%`;
-        strengthBarInner.textContent = `Strength: ${result.score * 25}%`;
-        strengthBar.appendChild(strengthBarInner);
-        feedbackElement.appendChild(strengthBar);
-
-        // Display specific feedback and suggestions from zxcvbn
-        if (result.feedback.warning) {
-            feedbackElement.appendChild(document.createElement("p")).textContent = result.feedback.warning;
-        }
-        if (result.feedback.suggestions.length > 0) {
-            const suggestionsList = document.createElement("ul");
-            feedbackElement.appendChild(suggestionsList);
-            result.feedback.suggestions.forEach(suggestion => {
-                const suggestionItem = document.createElement("li");
-                suggestionItem.textContent = suggestion;
-                suggestionsList.appendChild(suggestionItem);
-            });
-        }
-    }
-
-    // Evaluate password strength on input and on form submission
-    passwordInput.addEventListener("input", evaluatePasswordStrength);
-    document.getElementById("register").addEventListener("submit", evaluatePasswordStrength);
-</script>
- *@
 <div class="container mt-5">
 
     <div class="row justify-content-center align-items-center">
@@ -124,8 +68,6 @@
                     <input type="password" asp-for="RModel.Password" class="form-control" />
                     <span asp-validaton-for="RModel.Password" class="text-danger"></span>
                 </div>
-
-                <div id="password-strength-feedback"></div>
 
                 <div class="mb-3">
                     <label class="form-label" asp-for="RModel.ConfirmPassword">Confirm Password</label>
